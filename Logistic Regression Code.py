@@ -44,3 +44,38 @@ accuracy_training = metrics.accuracy_score(y_training, predictions_training)
 accuracy_test = metrics.accuracy_score(y_test, predictions_test)
 print("Accuracy on training data:",accuracy_training)
 print("Accuracy on test data:",accuracy_test)
+
+c_values=[0.01, 0.1, 1, 10, 100]
+for c in c_values:
+    model = LogisticRegression(C=c, max_iter=20000)
+    model.fit(X_training, y_training)
+    predictions_test = model.predict(X_test)
+    accuracy_test = metrics.accuracy_score(y_test, predictions_test)
+    print("C:", c, " - Accuracy on test data:", accuracy_test)
+
+penalty_list=['l1', 'l2', 'elasticnet', None]
+for penalty in penalty_list:
+    if penalty == 'elasticnet':
+        model = LogisticRegression(penalty=penalty, solver='saga', l1_ratio=0.5, max_iter=20000)
+    elif penalty == 'l2' or penalty is None:
+        model = LogisticRegression(penalty=penalty, solver='lbfgs', max_iter=20000)
+    else:
+        model = LogisticRegression(penalty=penalty,solver="liblinear", max_iter=20000 )
+    model.fit(X_training, y_training)
+    predictions_test = model.predict(X_test)
+    accuracy_test = metrics.accuracy_score(y_test, predictions_test)
+    print("Penalty:", penalty, " - Accuracy on test data:", accuracy_test)
+
+
+for c in c_values:
+    for penalty in penalty_list:
+        if penalty == 'elasticnet':
+            model = LogisticRegression(C=c,penalty=penalty, solver='saga', l1_ratio=0.5, max_iter=20000)
+        elif penalty == 'l2' or penalty is None:
+            model = LogisticRegression(C=c,penalty=penalty, solver='lbfgs', max_iter=20000)
+        else:
+            model = LogisticRegression(C=c,penalty=penalty,solver="liblinear", max_iter=20000 )
+        model.fit(X_training, y_training)
+        predictions_test = model.predict(X_test)
+        accuracy_test = metrics.accuracy_score(y_test, predictions_test)
+        print("Penalty:", penalty, "C: ",c," - Accuracy on test data:", accuracy_test)
