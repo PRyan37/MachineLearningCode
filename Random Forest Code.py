@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import metrics
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import StandardScaler
 training_file="wildfires_training.csv"
@@ -34,7 +34,7 @@ print(y_test.head())
 print(y_test.shape)
 
 
-model = LogisticRegression(max_iter=1000)
+model = RandomForestClassifier()
 model.fit(X_training, y_training)
 
 predictions_training = model.predict(X_training)
@@ -45,39 +45,29 @@ accuracy_test = metrics.accuracy_score(y_test, predictions_test)
 print("Accuracy on training data:",accuracy_training)
 print("Accuracy on test data:",accuracy_test)
 
-print("\n ------------TESTING C------------- \n")
-c_values=[0.01, 0.1, 1, 10, 100]
-for c in c_values:
-    model = LogisticRegression(C=c, max_iter=20000)
+print("\n ------------TESTING N_ESTIMATORS------------ \n")
+n_estimator_values=[100, 200, 300, 400, 500]
+for n_estimator in n_estimator_values:
+    model = RandomForestClassifier(n_estimators=n_estimator)
     model.fit(X_training, y_training)
     predictions_test = model.predict(X_test)
     accuracy_test = metrics.accuracy_score(y_test, predictions_test)
-    print("C:", c, " - Accuracy on test data:", accuracy_test)
+    print("n_estimators:", n_estimator, " - Accuracy on test data:", accuracy_test)
 
-print("\n ------------TESTING PENALTY------------- \n")
-penalty_list=['l1', 'l2', 'elasticnet', None]
-for penalty in penalty_list:
-    if penalty == 'elasticnet':
-        model = LogisticRegression(penalty=penalty, solver='saga', l1_ratio=0.5, max_iter=20000)
-    elif penalty == 'l2' or penalty is None:
-        model = LogisticRegression(penalty=penalty, solver='lbfgs', max_iter=20000)
-    else:
-        model = LogisticRegression(penalty=penalty,solver="liblinear", max_iter=20000 )
+print("\n ----------TESTING MAX_DEPTH----------- \n")
+max_depth_values=[5,10,15,20,25,30]
+for max_depth in max_depth_values:
+    model = RandomForestClassifier(max_depth=max_depth)
     model.fit(X_training, y_training)
     predictions_test = model.predict(X_test)
     accuracy_test = metrics.accuracy_score(y_test, predictions_test)
-    print("Penalty:", penalty, " - Accuracy on test data:", accuracy_test)
+    print("max_depth:", max_depth, " - Accuracy on test data:", accuracy_test)
 
-print("\n ------------TESTING BOTH C AND PENALTY------------- \n")
-for c in c_values:
-    for penalty in penalty_list:
-        if penalty == 'elasticnet':
-            model = LogisticRegression(C=c,penalty=penalty, solver='saga', l1_ratio=0.5, max_iter=20000)
-        elif penalty == 'l2' or penalty is None:
-            model = LogisticRegression(C=c,penalty=penalty, solver='lbfgs', max_iter=20000)
-        else:
-            model = LogisticRegression(C=c,penalty=penalty,solver="liblinear", max_iter=20000 )
+print("\n ------------TESTING BOTH MAX_DEPTH AND N_ESTIMATORS------------- \n")
+for max_depth in max_depth_values:
+    for n_estimator in n_estimator_values:
+        model = RandomForestClassifier(max_depth=max_depth, n_estimators=n_estimator)
         model.fit(X_training, y_training)
         predictions_test = model.predict(X_test)
         accuracy_test = metrics.accuracy_score(y_test, predictions_test)
-        print("Penalty:", penalty, "C: ",c," - Accuracy on test data:", accuracy_test)
+        print("max_depth:", max_depth, " n_estimators:", n_estimator, " - Accuracy on test data:", accuracy_test)
