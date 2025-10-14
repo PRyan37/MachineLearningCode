@@ -68,16 +68,52 @@ for penalty in penalty_list:
     accuracy_test = metrics.accuracy_score(y_test, predictions_test)
     print("Penalty:", penalty, " - Accuracy on test data:", accuracy_test)
 
+penalty_list_no_none=['l1', 'l2', 'elasticnet']
+l1_accuracy=[]
+l2_accuracy=[]
+elasticnet_accuracy=[]
+
 print("\n ------------TESTING BOTH C AND PENALTY------------- \n")
 for c in c_values:
-    for penalty in penalty_list:
+    for penalty in penalty_list_no_none:
         if penalty == 'elasticnet':
             model = LogisticRegression(C=c,penalty=penalty, solver='saga', l1_ratio=0.5, max_iter=20000)
-        elif penalty == 'l2' or penalty is None:
+        elif penalty == 'l2':
             model = LogisticRegression(C=c,penalty=penalty, solver='lbfgs', max_iter=20000)
-        else:
+        elif penalty =='l1':
             model = LogisticRegression(C=c,penalty=penalty,solver="liblinear", max_iter=20000 )
+
+
         model.fit(X_training, y_training)
         predictions_test = model.predict(X_test)
         accuracy_test = metrics.accuracy_score(y_test, predictions_test)
-        print("Penalty:", penalty, "C: ",c," - Accuracy on test data:", accuracy_test)
+        if penalty == 'l1':
+            l1_accuracy.append(accuracy_test)
+        elif penalty == 'l2':
+            l2_accuracy.append(accuracy_test)
+        elif penalty == 'elasticnet':
+            elasticnet_accuracy.append(accuracy_test)
+        print("Penalty:", penalty, "| C: ",c," - Accuracy on test data:", accuracy_test)
+
+model = LogisticRegression(penalty=None, solver='lbfgs', max_iter=20000)
+model.fit(X_training, y_training)
+predictions_test = model.predict(X_test)
+none_accuracy = metrics.accuracy_score(y_test, predictions_test)
+print("Penalty: None - Accuracy on test data:", none_accuracy)
+
+
+
+plt.plot(c_values, l1_accuracy, marker='o', label='L1')
+plt.plot(c_values, l2_accuracy, marker='o', label='L2')
+plt.plot(c_values, elasticnet_accuracy, marker='o', label='ElasticNet')
+plt.axhline(y=none_accuracy, color='gray', linestyle='--', label='None')
+
+
+plt.xscale('log')
+plt.xlabel('C (inverse regularization strength)')
+plt.ylabel('Accuracy on Test Data')
+plt.title('Effect of C and Penalty on Logistic Regression Accuracy')
+plt.legend()
+plt.grid(True, which='both', linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()

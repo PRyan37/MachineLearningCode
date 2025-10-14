@@ -63,11 +63,22 @@ for max_depth in max_depth_values:
     accuracy_test = metrics.accuracy_score(y_test, predictions_test)
     print("max_depth:", max_depth, " - Accuracy on test data:", accuracy_test)
 
+best_accuracy=0
+best_max_depth=0
+best_n_estimator=0
+
 print("\n ------------TESTING BOTH MAX_DEPTH AND N_ESTIMATORS------------- \n")
 for max_depth in max_depth_values:
     for n_estimator in n_estimator_values:
-        model = RandomForestClassifier(max_depth=max_depth, n_estimators=n_estimator)
+        model = RandomForestClassifier(max_depth=max_depth, n_estimators=n_estimator,random_state=42)
         model.fit(X_training, y_training)
         predictions_test = model.predict(X_test)
         accuracy_test = metrics.accuracy_score(y_test, predictions_test)
+
+        if accuracy_test>=best_accuracy:
+            best_accuracy=accuracy_test
+            best_max_depth=max_depth
+            best_n_estimator=n_estimator
         print("max_depth:", max_depth, " n_estimators:", n_estimator, " - Accuracy on test data:", accuracy_test)
+
+print("The best accuracy is ",best_accuracy," with max_depth=",best_max_depth," and n_estimators=",best_n_estimator)
