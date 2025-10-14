@@ -34,7 +34,7 @@ print(y_test.head())
 print(y_test.shape)
 
 
-model = LogisticRegression(max_iter=1000)
+model = LogisticRegression(max_iter=20000)
 model.fit(X_training, y_training)
 
 predictions_training = model.predict(X_training)
@@ -44,9 +44,12 @@ accuracy_training = metrics.accuracy_score(y_training, predictions_training)
 accuracy_test = metrics.accuracy_score(y_test, predictions_test)
 print("Accuracy on training data:",accuracy_training)
 print("Accuracy on test data:",accuracy_test)
-
-print("\n ------------TESTING C------------- \n")
+penalty_list=['l1', 'l2', 'elasticnet', None]
 c_values=[0.01, 0.1, 1, 10, 100]
+print("C values:", c_values)
+print("Penalty values:", penalty_list)
+print("\n ------------TESTING C------------- \n")
+
 for c in c_values:
     model = LogisticRegression(C=c, max_iter=20000)
     model.fit(X_training, y_training)
@@ -55,7 +58,7 @@ for c in c_values:
     print("C:", c, " - Accuracy on test data:", accuracy_test)
 
 print("\n ------------TESTING PENALTY------------- \n")
-penalty_list=['l1', 'l2', 'elasticnet', None]
+
 for penalty in penalty_list:
     if penalty == 'elasticnet':
         model = LogisticRegression(penalty=penalty, solver='saga', l1_ratio=0.5, max_iter=20000)
@@ -72,6 +75,14 @@ penalty_list_no_none=['l1', 'l2', 'elasticnet']
 l1_accuracy=[]
 l2_accuracy=[]
 elasticnet_accuracy=[]
+best_penalty=""
+best_c=0
+best_accuracy=0
+worst_penalty=""
+worst_c=0
+worst_accuracy=1
+count=0
+total_accuracy=0
 
 print("\n ------------TESTING BOTH C AND PENALTY------------- \n")
 for c in c_values:
@@ -93,6 +104,16 @@ for c in c_values:
             l2_accuracy.append(accuracy_test)
         elif penalty == 'elasticnet':
             elasticnet_accuracy.append(accuracy_test)
+        if accuracy_test > best_accuracy:
+            best_accuracy=accuracy_test
+            best_penalty=penalty
+            best_c=c
+        if accuracy_test < worst_accuracy:
+            worst_accuracy=accuracy_test
+            worst_penalty=penalty
+            worst_c=c
+        count+=1
+        total_accuracy=total_accuracy+accuracy_test
         print("Penalty:", penalty, "| C: ",c," - Accuracy on test data:", accuracy_test)
 
 model = LogisticRegression(penalty=None, solver='lbfgs', max_iter=20000)
@@ -101,19 +122,21 @@ predictions_test = model.predict(X_test)
 none_accuracy = metrics.accuracy_score(y_test, predictions_test)
 print("Penalty: None - Accuracy on test data:", none_accuracy)
 
-
+print("\n Best Penalty:", best_penalty, "| Best C:", best_c, " | Best Accuracy:", best_accuracy)
+print(" Worst Penalty:", worst_penalty, "| Worst C:", worst_c, " | Worst Accuracy:", worst_accuracy)
+print("Average Accuracy:", total_accuracy/count)
 
 plt.plot(c_values, l1_accuracy, marker='o', label='L1')
 plt.plot(c_values, l2_accuracy, marker='o', label='L2')
 plt.plot(c_values, elasticnet_accuracy, marker='o', label='ElasticNet')
-plt.axhline(y=none_accuracy, color='gray', linestyle='--', label='None')
+plt.axhline(y=none_accuracy, color='red', label='None')
 
 
 plt.xscale('log')
-plt.xlabel('C (inverse regularization strength)')
+plt.xlabel('C (Inverse Regularization Strength)')
 plt.ylabel('Accuracy on Test Data')
 plt.title('Effect of C and Penalty on Logistic Regression Accuracy')
 plt.legend()
-plt.grid(True, which='both', linestyle='--', alpha=0.6)
+plt.grid(True, which='major', linestyle='--', alpha=0.6)
 plt.tight_layout()
 plt.show()
