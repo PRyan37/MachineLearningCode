@@ -45,6 +45,7 @@ print("---------DEFAULT MODEL RESULTS---------")
 print("Accuracy on training data:",default_accuracy_training)
 print("Accuracy on test data:",default_accuracy_test)
 
+#tested model on just one hyperparameter at a time
 print("\n ------------TESTING N_ESTIMATORS------------ \n")
 n_estimator_values=[100, 200, 300, 400, 500]
 for n_estimator in n_estimator_values:
@@ -70,7 +71,7 @@ for max_depth in max_depth_values:
     print("max_depth:", max_depth, " - Accuracy on training data:", accuracy_training)
     print("max_depth:", max_depth, " - Accuracy on test data:", accuracy_test)
 
-
+#creating empty lists and best/worst variables
 best_accuracy_training=0
 best_max_depth_training=0
 best_n_estimator_training=0
@@ -100,6 +101,7 @@ accuracy_list_test = []
 
 count=0
 
+#using nestled for loop
 print("\n ------------TESTING BOTH MAX_DEPTH AND N_ESTIMATORS------------- \n")
 for max_depth in max_depth_values:
     for n_estimator in n_estimator_values:
@@ -161,15 +163,15 @@ print("The best accuracy is ",best_accuracy_test," with max_depth=",best_max_dep
 print("The worst accuracy is ",worst_accuracy_test," with max_depth=",worst_max_depth_test," and n_estimators=",worst_n_estimator_test)
 print("The average accuracy is ",total_accuracy_test/count)
 
-
+#Creating dataframes
 df = pd.DataFrame({
     'max_depth': max_depth_list_training,
     'n_estimators': n_estimators_list_training,
     'accuracy': accuracy_list_training
 })
-# plot
 
 
+#ploting heatmaps
 pivot = df.pivot(index='max_depth', columns='n_estimators', values='accuracy')
 plt.figure(figsize=(8, 5))
 sns.heatmap(pivot, annot=True,cmap='mako', fmt=".2f")
@@ -183,7 +185,6 @@ df = pd.DataFrame({
     'n_estimators': n_estimators_list_test,
     'accuracy': accuracy_list_test
 })
-# plot
 
 
 pivot = df.pivot(index='max_depth', columns='n_estimators', values='accuracy')
