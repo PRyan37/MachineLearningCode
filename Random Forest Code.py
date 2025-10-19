@@ -70,6 +70,7 @@ for max_depth in max_depth_values:
     print("max_depth:", max_depth, " - Accuracy on training data:", accuracy_training)
     print("max_depth:", max_depth, " - Accuracy on test data:", accuracy_test)
 
+
 best_accuracy_training=0
 best_max_depth_training=0
 best_n_estimator_training=0
@@ -192,34 +193,3 @@ plt.title("The Effect of max_depth and n_estimators on Random Forest Accuracy (T
 plt.ylabel("max_depth")
 plt.xlabel("n_estimators")
 plt.show()
-# print(model.feature_importances_)
-#
-# criteria = ['gini', 'entropy', 'log_loss']
-# n_estimators = [100, 200, 300, 400, 500]
-#
-# # Accuracy results
-# accuracies = {
-#     'gini': [0.84, 0.84, 0.82, 0.84, 0.84],
-#     'entropy': [0.86, 0.84, 0.84, 0.84, 0.86],
-#     'log_loss': [0.86, 0.84, 0.84, 0.84, 0.86]
-# }
-#
-# # Plot each criterion as a line
-# plt.figure(figsize=(8, 5))
-# for criterion in criteria:
-#     plt.plot(n_estimators, accuracies[criterion], marker='o', label=criterion)
-#
-# # Labels and title
-# plt.title("Random Forest Accuracy vs. Number of Estimators")
-# plt.xlabel("Number of Estimators (n_estimators)")
-# plt.ylabel("Accuracy on Test Data")
-# plt.xticks(n_estimators)
-# plt.ylim(0.8, 0.9)
-# plt.grid(True, linestyle='--', alpha=0.6)
-# plt.legend(title="Criterion")
-#
-#
-# plt.show()
-
-
-# ✅ after loop: create a dataframe for plotting
