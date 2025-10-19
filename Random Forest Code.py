@@ -117,11 +117,11 @@ for max_depth in max_depth_values:
         accuracy_list_training.append(accuracy_training)
 
         if accuracy_training>=best_accuracy_training:
-            best_accuracy=accuracy_training
+            best_accuracy_training=accuracy_training
             best_max_depth_training=max_depth
             best_n_estimator_training=n_estimator
         if accuracy_training<=worst_accuracy_training:
-            worst_accuracy_training=accuracy_test
+            worst_accuracy_training=accuracy_training
             worst_max_depth_training=max_depth
             worst_n_estimator_training=n_estimator
 
@@ -145,18 +145,21 @@ for max_depth in max_depth_values:
         total_accuracy_training = total_accuracy_training + accuracy_training
         total_accuracy_test=total_accuracy_test+accuracy_test
         print("max_depth:", max_depth, " n_estimators:", n_estimator, " - Accuracy on test data:", accuracy_test)
+        print("max_depth:", max_depth, " n_estimators:", n_estimator, " - Accuracy on training data:", accuracy_training)
 
-print("------------TRAINING RESULTS----------- \n")
+print("------------TRAINING RESULTS----------- ")
+print("Default training accuracy is ",default_accuracy_training)
 print("The best accuracy is ",best_accuracy_training," with max_depth=",best_max_depth_training," and n_estimators=",best_n_estimator_training)
 print("The worst accuracy is ",worst_accuracy_training," with max_depth=",worst_max_depth_training," and n_estimators=",worst_n_estimator_training)
 print("The average accuracy is ",total_accuracy_training/count)
-print("Default training accuracy is ",default_accuracy_training)
 
-print("------------TEST RESULTS----------- \n")
+
+print("------------TEST RESULTS----------- ")
+print("Default test accuracy is ",default_accuracy_test)
 print("The best accuracy is ",best_accuracy_test," with max_depth=",best_max_depth_test," and n_estimators=",best_n_estimator_test)
 print("The worst accuracy is ",worst_accuracy_test," with max_depth=",worst_max_depth_test," and n_estimators=",worst_n_estimator_test)
 print("The average accuracy is ",total_accuracy_test/count)
-print("Default test accuracy is ",default_accuracy_test)
+
 
 df = pd.DataFrame({
     'max_depth': max_depth_list_training,

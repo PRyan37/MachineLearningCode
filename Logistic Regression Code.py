@@ -38,10 +38,10 @@ model.fit(X_training, y_training)
 predictions_training = model.predict(X_training)
 predictions_test = model.predict(X_test)
 
-accuracy_training = metrics.accuracy_score(y_training, predictions_training)
-accuracy_test = metrics.accuracy_score(y_test, predictions_test)
-print("Accuracy on training data:",accuracy_training)
-print("Accuracy on test data:",accuracy_test)
+default_accuracy_training = metrics.accuracy_score(y_training, predictions_training)
+default_accuracy_test = metrics.accuracy_score(y_test, predictions_test)
+print("Accuracy on training data:",default_accuracy_training)
+print("Accuracy on test data:",default_accuracy_test)
 
 
 penalty_list=['l1', 'l2', 'elasticnet', None]
@@ -177,13 +177,15 @@ print("Penalty: None - Accuracy on training data:", none_accuracy_training)
 print("Penalty: None - Accuracy on test data:", none_accuracy_test)
 
 
-print("------------TRAINING RESULTS----------- \n")
-print("\n Best Penalty:", best_penalty_training, "| Best C:", best_c_training, " | Best Accuracy:", best_accuracy_training)
+print("------------TRAINING RESULTS-----------")
+print("Default training accuracy is ",default_accuracy_training)
+print("Best Penalty:", best_penalty_training, "| Best C:", best_c_training, " | Best Accuracy:", best_accuracy_training)
 print(" Worst Penalty:", worst_penalty_training, "| Worst C:", worst_c_training, " | Worst Accuracy:", worst_accuracy_training)
 print("Average Accuracy:", total_accuracy_training/count)
 
-print("------------TEST RESULTS----------- \n")
-print("\n Best Penalty:", best_penalty_test, "| Best C:", best_c_test, " | Best Accuracy:", best_accuracy_test)
+print("------------TEST RESULTS----------- ")
+print("Default test accuracy is ",default_accuracy_test)
+print("Best Penalty:", best_penalty_test, "| Best C:", best_c_test, " | Best Accuracy:", best_accuracy_test)
 print(" Worst Penalty:", worst_penalty_test, "| Worst C:", worst_c_test, " | Worst Accuracy:", worst_accuracy_test)
 print("Average Accuracy:", total_accuracy_test/count)
 
